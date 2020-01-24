@@ -1,8 +1,9 @@
 (module
-  (global $g (import "js" "global") (mut i32))
-  (func (export "getGlobal") (result i32)
-    (global.get $g))
-  (func (export "add")
-    (global.set $g
-      (i32.add (global.get $g) (i32.const 10))))
-)
+  (import "console" "log" (func $log (param i32 i32)))
+  (import "js" "mem" (memory 1))
+  (data (i32.const 0) "JHSerodio Carambolas quadradonas never die")
+  (func (export "writeName")
+    i32.const 0 ;; offset0
+    i32.const 42 ;; offset2
+    call $log))
+

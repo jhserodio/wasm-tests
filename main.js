@@ -1,25 +1,20 @@
-const global = new WebAssembly.Global({
-    value: 'i32',
-    mutable: true,
-}, 0)
+function consoleLogString(offset, length) {
+  var bytes = new Uint8Array(memory.buffer, offset, length);
+  var string = new TextDecoder('utf8').decode(bytes);
+  console.log(string);
+}
 
+
+var memory = new WebAssembly.Memory({ initial:1 });
+
+var importObject = { console: { log: consoleLogString }, js: { mem: memory } }
 
 fetch('./main.wasm')
     .then(response => response.arrayBuffer())
-    .then(bytes => WebAssembly.instantiate(bytes, { js: { global }}))
+    .then(bytes => WebAssembly.instantiate(bytes, importObject))
     .then(results => {
-        instance = results.instance;
-        console.log("global : ", global.value)
-
-        global.value = 31;
-        console.log("global with mut : ", global.value)
-
-        instance.exports.add();
-        console.log("global with add: ", global.value)
-
-        global.value = 5;
-        const result = instance.exports.add();
-        console.log("global with mut & add: ", global.value)
+      writeName = results.instance.exports.writeName;
+      writeName();
     }).catch(console.error);
   
   
